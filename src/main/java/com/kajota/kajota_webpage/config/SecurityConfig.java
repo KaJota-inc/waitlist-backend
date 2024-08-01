@@ -1,8 +1,9 @@
 package com.kajota.kajota_webpage.config;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -16,7 +17,10 @@ import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
+@Slf4j
 public class SecurityConfig {
+    @Value("${crossOrigins}")
+    private String allowedOrigins;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -34,11 +38,14 @@ public class SecurityConfig {
         CorsConfiguration corsConfig = new CorsConfiguration();
 
         // Define allowed origins
-        String allowedOrigins = "https://kajota.onrender.com";
-        List<String> origins = Arrays.stream(allowedOrigins.split(","))
-                .map(String::trim)
-                .collect(Collectors.toList());
-        corsConfig.setAllowedOrigins(origins);
+        if(!allowedOrigins.isEmpty()){
+            List<String> origins = Arrays.stream(allowedOrigins.split(","))
+                    .map(String::trim)
+                    .collect(Collectors.toList());
+            corsConfig.setAllowedOrigins(origins);
+            log.info("Allowed origins are : {}", allowedOrigins);
+        }
+
 
         // Define allowed methods and headers
         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));

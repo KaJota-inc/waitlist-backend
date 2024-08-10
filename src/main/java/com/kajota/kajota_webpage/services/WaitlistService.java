@@ -1,13 +1,13 @@
 package com.kajota.kajota_webpage.services;
 
-import com.kajota.kajota_webpage.entities.EmailSender;
 import com.kajota.kajota_webpage.entities.User;
 import com.kajota.kajota_webpage.exceptions.UserAlreadyExistException;
 import com.kajota.kajota_webpage.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 @Slf4j
@@ -30,17 +30,25 @@ public class WaitlistService {
 
         //Try to get user from DB by email
         boolean userInDbByEmail = userRepository.existsUserByEmail(email);
-
         if(userInDbByEmail){
+//            userRepository.deleteUserByEmail(email);
             log.info("User already exists: {}", user.getEmail());
             throw new UserAlreadyExistException("Email already in use");
         } else{
             emailSender.sendEmail(
                     email,
                     "Joined Kajota waitlist",
-                    "Hello, You Have successfully joined the kajota waitist. and you'd be informed when we launch.",
-                    null);
-            userRepository.save(user);
+                    null
+            );
+            //Given
+            User suser = new User(
+                    "David",
+                    "Adisa",
+                    "092383488223",
+                    true,
+                    new ArrayList<>()
+            );
+            userRepository.save(suser);
 
         }
     }

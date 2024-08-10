@@ -1,6 +1,5 @@
 package com.kajota.kajota_webpage.services;
 
-import com.kajota.kajota_webpage.entities.EmailSender;
 import com.kajota.kajota_webpage.entities.User;
 import com.kajota.kajota_webpage.exceptions.UserAlreadyExistException;
 import com.kajota.kajota_webpage.repositories.UserRepository;

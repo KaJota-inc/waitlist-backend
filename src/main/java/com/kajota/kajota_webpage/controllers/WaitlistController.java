@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class WaitlistController {
 
     private final WaitlistService waitlistService;
+
 
     @PostMapping("/add-user")
     public ResponseEntity<Response> addUserToWaitlist(@RequestBody User user){
@@ -41,6 +43,12 @@ public class WaitlistController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
 
+    }
+
+    @GetMapping("/view")
+    public String view(Model model){
+        model.addAttribute("message", "Hello, World!");
+        return "emailtemplate";
     }
 
 }

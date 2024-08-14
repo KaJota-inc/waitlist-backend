@@ -45,10 +45,10 @@ public class WaitlistController {
 
     }
 
-    @GetMapping("/view")
-    public String view(Model model){
-        model.addAttribute("message", "Hello, World!");
-        return "emailtemplate";
-    }
+//    @GetMapping("/view")
+//    public String view(Model model){
+//        model.addAttribute("message", "Hello, World!");
+//        return "emailtemplate";
+//    }
 
 }

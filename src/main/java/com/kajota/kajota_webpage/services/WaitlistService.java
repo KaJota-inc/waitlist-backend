@@ -31,7 +31,6 @@ public class WaitlistService {
         //Try to get user from DB by email
         boolean userInDbByEmail = userRepository.existsUserByEmail(email);
         if(userInDbByEmail){
-//            userRepository.deleteUserByEmail(email);
             log.info("User already exists: {}", user.getEmail());
             throw new UserAlreadyExistException("Email already in use");
         } else{
@@ -40,15 +39,15 @@ public class WaitlistService {
                     "Joined Kajota waitlist",
                     null
             );
-            //Given
-            User suser = new User(
-                    "David",
-                    "Adisa",
-                    "092383488223",
-                    true,
-                    new ArrayList<>()
-            );
-            userRepository.save(suser);
+//            //Given
+//            User suser = new User(
+//                    "David",
+//                    "Adisa",
+//                    "092383488223",
+//                    true,
+//                    new ArrayList<>()
+//            );
+            userRepository.save(user);
 
         }
     }

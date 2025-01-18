@@ -5,19 +5,13 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 import javax.mail.*;
 import javax.mail.internet.*;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -109,14 +103,3 @@ public class EmailSender {
         }
     }
 }
-
-
-//
-//            // Set the email attachment part
-//            if (attachmentPath != null && !attachmentPath.isEmpty()) {
-//                MimeBodyPart attachmentBodyPart = new MimeBodyPart();
-//                DataSource source = new FileDataSource(attachmentPath);
-//                attachmentBodyPart.setDataHandler(new DataHandler(source));
-//                attachmentBodyPart.setFileName(source.getName());
-//                multipart.addBodyPart(attachmentBodyPart);
-//            }

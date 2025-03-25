@@ -1,12 +1,20 @@
 package com.kajota.kajota_webpage.services;
 
+import com.kajota.kajota_webpage.services.interfaces.IEmailSender;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -19,7 +27,8 @@ import java.util.Properties;
 @Service
 @Slf4j
 @Data
-public class EmailSender {
+@AllArgsConstructor
+public class EmailSender implements IEmailSender {
 
     private final String smtpHost;
     private final String smtpPort;
@@ -30,6 +39,8 @@ public class EmailSender {
     private TemplateEngine templateEngine;
 
     private JavaMailSender emailSender;
+
+    Environment environment;
 
     @Autowired
     public EmailSender(
@@ -54,7 +65,26 @@ public class EmailSender {
         return properties;
     }
 
-    @SneakyThrows
+    public void subscribeUser(String email) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBasicAuth("kajota", environment.getProperty("mailchimp.api-key",""));
+        headers.set("Content-Type", "application/json");
+
+        String payload = "{ \"email_address\": \"" + email + "\", \"status\": \"subscribed\" }";
+
+        HttpEntity<String> request = new HttpEntity<>(payload, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity(environment.getProperty("mailchimp.api-url",""), request, String.class);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            System.out.println("User subscribed successfully.");
+        } else {
+            System.out.println("Error subscribing user: " + response.getBody());
+        }
+    }
+
+    @Override
     public void sendEmail(String toAddress, String subject, String attachmentPath) {
         Properties properties = getMailServerProperties();
 
@@ -79,7 +109,7 @@ public class EmailSender {
             // Create a new email message
             Message message = new MimeMessage(session);
 
-            message.setFrom(new InternetAddress(username));
+            message.setFrom(new InternetAddress("hello@kajota.io"));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toAddress));
             message.setSubject(subject);
 

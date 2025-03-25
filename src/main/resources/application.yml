@@ -1,8 +1,4 @@
-mailchimp:
-  api-key: 1555dbfb4f7a429965f4cf68b1ea7036-us12
-  api-url: https://us12.api.mailchimp.com/3.0/lists/c6819812de/members
-mandrill:
-  api-key: md-ljnjsz6ztM3JKkYfCdCSkQ
+
 server:
   port: 9088
   servlet:

@@ -40,19 +40,21 @@ public class EmailSender implements IEmailSender {
 
     private JavaMailSender emailSender;
 
-    Environment environment;
+    private final Environment environment;
 
     @Autowired
     public EmailSender(
             @Value("${spring.mail.host}") String smtpHost,
             @Value("${spring.mail.port}") String smtpPort,
             @Value("${spring.mail.username}") String username,
-            @Value("${spring.mail.password}") String password
+            @Value("${spring.mail.password}") String password,
+            Environment environment
     ) {
         this.smtpHost = smtpHost;
         this.smtpPort = smtpPort;
         this.username = username;
         this.password = password;
+        this.environment = environment;
     }
 
 
@@ -66,22 +68,27 @@ public class EmailSender implements IEmailSender {
     }
 
     public void subscribeUser(String email) {
-        RestTemplate restTemplate = new RestTemplate();
+        try{
+            RestTemplate restTemplate = new RestTemplate();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBasicAuth("kajota", environment.getProperty("mailchimp.api-key",""));
-        headers.set("Content-Type", "application/json");
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBasicAuth("kajota", environment.getProperty("mailchimp.api-key",""));
+            headers.set("Content-Type", "application/json");
 
-        String payload = "{ \"email_address\": \"" + email + "\", \"status\": \"subscribed\" }";
+            String payload = "{ \"email_address\": \"" + email + "\", \"status\": \"subscribed\" }";
 
-        HttpEntity<String> request = new HttpEntity<>(payload, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity(environment.getProperty("mailchimp.api-url",""), request, String.class);
+            HttpEntity<String> request = new HttpEntity<>(payload, headers);
+            ResponseEntity<String> response = restTemplate.postForEntity(environment.getProperty("mailchimp.api-url",""), request, String.class);
 
-        if (response.getStatusCode().is2xxSuccessful()) {
-            System.out.println("User subscribed successfully.");
-        } else {
-            System.out.println("Error subscribing user: " + response.getBody());
+            if (response.getStatusCode().is2xxSuccessful()) {
+                System.out.println("User subscribed successfully.");
+            } else {
+                System.out.println("Error subscribing user: " + response.getBody());
+            }
+        }catch(Exception ex){
+            throw new RuntimeException("Something went wrong:"+ ex.getMessage());
         }
+
     }
 
     @Override

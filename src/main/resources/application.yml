@@ -1,8 +1,0 @@
-server:
-  port: 9088
-
-mailchimp:
-  api-key: b24c5c1c6e94c5200f14988aca28fd97-us12
-  api-url: https://us12.api.mailchimp.com/3.0/lists/c6819812de/members
-  default-to:
-  from-email:

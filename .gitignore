@@ -36,3 +36,5 @@ build/
 .env
 
 #safe files
+application.properties
+application.yml
